@@ -1,0 +1,44 @@
+
+.main-container {
+	display: flex;
+
+	flex-direction: column;
+
+	gap: 15px;
+
+	width: 99vw;
+	height: 98vh;
+}
+
+.main-horizontal {
+	height: 100vh;
+	width: 100%;
+
+	display: flex;
+
+	gap: 15px;
+
+	flex-direction: row;
+}
+
+.main-file-explorer {
+	height: 100%;
+
+	width: 20%;
+}
+
+.main-vertical {
+	height: 100%;
+
+	display: flex;
+
+	flex-direction: column;
+
+	width: 100%;
+
+	gap: 15px;
+}
+
+.main-console {
+	height: 50%;
+}

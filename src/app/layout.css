@@ -1,0 +1,11 @@
+
+body {
+    background: black;
+}
+
+.base-container-style {
+    background: #25252570;
+
+    border-radius: 8px;
+    border: 2px #3D3D3D70 solid;
+}
