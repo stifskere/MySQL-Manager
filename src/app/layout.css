@@ -1,6 +1,8 @@
 
-body {
+body, html {
     background: black;
+
+    overflow: hidden;
 }
 
 .base-container-style {
@@ -8,4 +10,45 @@ body {
 
     border-radius: 8px;
     border: 2px #3D3D3D70 solid;
+}
+
+.modal-background {
+    height: 100%;
+    width: 100%;
+
+    top: 0;
+    left: 0;
+
+    backdrop-filter: blur(10px);
+
+    z-index: 2;
+
+    position: absolute;
+}
+
+.modal-background > .modal-tt-container {
+    z-index: 3;
+
+    position: absolute;
+
+    top: 47%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+}
+
+.modal-tt-container {
+    display: flex;
+
+    flex-direction: column;
+
+    color: white;
+}
+
+.modal-tt-container > h1 {
+    font-size: 3em
+}
+
+.modal-tt-container > .base-container-style {
+    backdrop-filter: blur(15px);
 }

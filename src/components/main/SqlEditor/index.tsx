@@ -1,9 +1,9 @@
-import {ReactElement, useState} from "react";
+import {ReactElement, useEffect, useState} from "react";
 
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faDownload, faFile, faUpload} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faDownload, faFile, faUpload } from "@fortawesome/free-solid-svg-icons";
 
-import {Editor} from "@monaco-editor/react";
+import { Editor } from "@monaco-editor/react";
 
 import "./index.css";
 
@@ -14,7 +14,26 @@ export default function SqlEditor(): ReactElement {
 		"SELECT 'Hello World!';"
 	);
 
+	const [loaded, setLoaded] = useState<boolean>(false);
+
+	useEffect((): void => {
+		if (!loaded) {
+			const storedValue: string | null = sessionStorage.getItem("editor-text");
+
+			if (storedValue !== null)
+				setEditorValue(storedValue);
+
+			setLoaded(true);
+		}
+
+		if (loaded)
+			sessionStorage.setItem("editor-text", editorValue);
+	}, [editorValue, loaded]);
+
 	function onDownload(): void {
+		if (editorValue === null)
+			return;
+
 		const downloadElement: HTMLAnchorElement = document.createElement("a");
 		downloadElement.href = URL.createObjectURL(new Blob([editorValue], {type: 'text/plain'}));
 		downloadElement.download = "script.sql";
@@ -45,7 +64,10 @@ export default function SqlEditor(): ReactElement {
 		setEditorValue("");
 	}
 
-	// TODO: on navigate save content
+	function onChange(text?: string): void {
+		if (text !== undefined)
+			setEditorValue(text);
+	}
 
 	return (
 		<div className="base-container-style sql-editor-container">
@@ -58,11 +80,8 @@ export default function SqlEditor(): ReactElement {
 				width="100%"
 				defaultLanguage="sql"
 				theme="vs-dark"
-				value={editorValue}
-				onChange={(t: string | undefined) => {
-					if (t !== undefined)
-						setEditorValue(t);
-				}}
+				value={editorValue!}
+				onChange={onChange}
 			/>
 		</div>
 	);

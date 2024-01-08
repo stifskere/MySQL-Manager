@@ -5,7 +5,6 @@ import SqlEditor from "@/components/main/SqlEditor";
 
 import "./page.css";
 
-
 export default function Home() {
 	function onRunCode(connection: string): void {
 		console.log(connection);

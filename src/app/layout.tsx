@@ -7,11 +7,12 @@ import WithChildren from "@/types/props/WithChildren";
 
 const inter: NextFont = Inter({ subsets: ['latin'] });
 
+import "primereact/resources/themes/bootstrap4-dark-purple/theme.css";
 import "./layout.css";
 
 export const metadata: Metadata = {
 	title: 'MySQL manager',
-	description: 'A small MySQL database administrator (dba)',
+	description: 'A small MySQL database administrator (dba)'
 };
 
 export default function RootLayout({children}: WithChildren) {
