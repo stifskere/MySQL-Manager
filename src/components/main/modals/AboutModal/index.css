@@ -1,0 +1,28 @@
+
+.about-modal-container {
+	width: 40vw;
+
+	padding: 1vh 1vw;
+
+	display: flex;
+
+	flex-direction: column;
+}
+
+.about-modal-action-buttons {
+	display: flex;
+
+	justify-content: flex-end;
+}
+
+.about-modal-bottom {
+	display: flex;
+}
+
+.about-modal-bottom > div {
+	width: 50%
+}
+
+.about-modal-made-with {
+
+}

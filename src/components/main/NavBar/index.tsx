@@ -1,20 +1,22 @@
-import { ReactElement, useEffect, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faPlay} from "@fortawesome/free-solid-svg-icons";
 
 import { ConnectionData, Connection } from "@/types/api-responses/ConnectionData";
+import {StateTuple} from "@/types/TypeDefinitions";
+
+import NewConnectionModal from "@/components/main/modals/NewConnection";
 
 import "./index.css";
-
-import {faPlay} from "@fortawesome/free-solid-svg-icons";
-import NewConnectionModal from "@/components/main/modals/NewConnection";
+import AboutModal from "@/components/main/modals/AboutModal";
 
 interface Props {
 	onRun: ((connection: string) => void);
 }
 
 export default function NavBar({onRun}: Props): ReactElement {
-	const [connections, setConnections] = useState<ConnectionData>();
-	const [currentModal, setCurrentModal] = useState<string | undefined>(undefined);
+	const [connections, setConnections]: StateTuple<ConnectionData | undefined> = useState<ConnectionData>();
+	const [currentModal, setCurrentModal]: StateTuple<ReactElement | undefined> = useState<ReactElement>();
 
 	useEffect((): void => {
 		fetch("/api/connections", { method: "GET" })
@@ -29,15 +31,21 @@ export default function NavBar({onRun}: Props): ReactElement {
 		onRun(option.text);
 	}
 
+	function setModal(modal: ReactElement | undefined): (() => void) {
+		return (): void => {
+			setCurrentModal(modal);
+		};
+	}
+
 	const disabled: boolean = connections === undefined || connections.length === 0;
 
 	return (
 		<>
-			<NewConnectionModal shown={false}/>
+			{currentModal !== undefined && currentModal}
 			<nav className="nav-bar-main">
 				<div className="nav-bar-button-container">
-					<a href="/new-connection" className="nav-bar-anchor">new connection</a>
-					<a href="/" className="nav-bar-anchor">about this</a>
+					<button onClick={setModal(<NewConnectionModal onCancel={setModal(undefined)} />)} className="nav-bar-anchor">New connection</button>
+					<button onClick={setModal(<AboutModal onCancel={setModal(undefined)} />)} className="nav-bar-anchor">About this</button>
 				</div>
 				<div className="nav-bar-button-container">
 					<FontAwesomeIcon icon={faPlay} className={`nav-bar-play${disabled ? "-disabled" : ""} fa-xl`} onClick={runHandler}/>

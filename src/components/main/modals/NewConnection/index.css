@@ -1,5 +1,32 @@
 
 .new-connection-container {
-	height: 60vh;
 	width: 30vw;
+
+	padding: 2vh 1vw;
+
+	display: flex;
+
+	flex-direction: column;
+
+	gap: 20px
+}
+
+.new-connection-user-input {
+	display: flex;
+
+	justify-content: center;
+
+	gap: 15px;
+}
+
+.new-connection-user-input > * {
+	width: 48%;
+}
+
+.new-connection-action-buttons {
+	display: flex;
+
+	justify-content: flex-end;
+
+	gap: 15px;
 }

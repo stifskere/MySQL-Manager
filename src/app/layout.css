@@ -5,6 +5,18 @@ body, html {
     overflow: hidden;
 }
 
+a {
+    text-decoration: none;
+
+    color: mediumpurple;
+
+    transition: color 200ms;
+}
+
+a:hover {
+    color: rebeccapurple;
+}
+
 .base-container-style {
     background: #25252570;
 

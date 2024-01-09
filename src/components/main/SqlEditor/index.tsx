@@ -6,9 +6,10 @@ import { faDownload, faFile, faUpload } from "@fortawesome/free-solid-svg-icons"
 import { Editor } from "@monaco-editor/react";
 
 import "./index.css";
+import {StateTuple} from "@/types/TypeDefinitions";
 
 export default function SqlEditor(): ReactElement {
-	const [editorValue, setEditorValue] = useState<string>(
+	const [editorValue, setEditorValue]: StateTuple<string> = useState<string>(
 		"-- This editor doesn't come with database autocompletion yet, but it will send your queries to any MySQL connection." +
 		"\n\n" +
 		"SELECT 'Hello World!';"

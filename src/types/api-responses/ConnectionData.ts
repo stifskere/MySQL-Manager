@@ -1,4 +1,6 @@
 
+// TODO: adapt it to connection that has multiple databases
+
 export type ConnectionData = Connection[];
 
 export interface Connection {
