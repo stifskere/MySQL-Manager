@@ -2,7 +2,7 @@
 .nav-bar-main {
 	background: #25252570;
 
-	height: 40px;
+	height: 50px;
 
 	border-radius: 8px;
 	border: 2px #3D3D3D70 solid;
@@ -49,7 +49,8 @@
 	font-size: 0.9em;
 }
 
-.nav-bar-anchor:hover::before {
+.nav-bar-anchor:hover::before,
+.nav-bar-play:hover::before {
 	content: "";
 
 	width: 90%;
@@ -84,6 +85,7 @@
 
 .nav-bar-options {
 	height: 80%;
+	min-width: 7vw;
 
 	padding: 5px 5px;
 
@@ -95,6 +97,8 @@
 	color: white;
 
 	transform: scale(90%);
+
+	text-align: center;
 }
 
 .nav-bar-options:disabled {

@@ -11,7 +11,7 @@
 	gap: 20px
 }
 
-.new-connection-user-input {
+.new-connection-vertical-fields {
 	display: flex;
 
 	justify-content: center;
@@ -19,7 +19,7 @@
 	gap: 15px;
 }
 
-.new-connection-user-input > * {
+.new-connection-vertical-fields > * {
 	width: 48%;
 }
 

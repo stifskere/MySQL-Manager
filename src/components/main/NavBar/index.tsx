@@ -1,14 +1,14 @@
 import React, { ReactElement, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faPlay} from "@fortawesome/free-solid-svg-icons";
+import { faPlay } from "@fortawesome/free-solid-svg-icons";
 
 import { ConnectionData, Connection } from "@/types/api-responses/ConnectionData";
-import {StateTuple} from "@/types/TypeDefinitions";
+import { StateTuple } from "@/types/TypeDefinitions";
 
 import NewConnectionModal from "@/components/main/modals/NewConnection";
+import AboutModal from "@/components/main/modals/AboutModal";
 
 import "./index.css";
-import AboutModal from "@/components/main/modals/AboutModal";
 
 interface Props {
 	onRun: ((connection: string) => void);

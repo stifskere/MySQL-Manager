@@ -1,4 +1,4 @@
-import mysql, {Connection, ConnectionOptions, Query, QueryError} from "mysql2";
+import { Connection, ConnectionOptions, Query, QueryError, createConnection } from "mysql2";
 
 export type CMOptions = ConnectionOptions & { name: string };
 
@@ -13,8 +13,8 @@ export default class ConnectionsManager {
 		if (name in this.connections)
 			return false;
 
-		this.connections[name] = mysql.createConnection(options satisfies ConnectionOptions);
-		this.connections[name].connect((err: QueryError | null) => {
+		this.connections[name] = createConnection(options satisfies ConnectionOptions);
+		this.connections[name].connect((err: QueryError | null): void => {
 			if (err !== null)
 				throw err;
 		});

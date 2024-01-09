@@ -3,7 +3,9 @@ import ConnectionsManager, {CMOptions} from "@/app/api/connections/ConnectionsMa
 
 import {Query} from "mysql2";
 
-import { NextResponse } from "next/server";
+import {NextRequest, NextResponse} from "next/server";
+
+import {parsePostFormContent} from "@/app/helpers";
 
 export function GET(_: Request): NextResponse {
 	const data: ConnectionData = [];
@@ -39,17 +41,19 @@ export function GET(_: Request): NextResponse {
 	return NextResponse.json(data);
 }
 
-export async function PUT(req: Request): Promise<NextResponse> {
-	const json: { [key: string]: any } = await req.json();
+export async function POST(req: NextRequest): Promise<NextResponse> {
+	const json: { [key: string]: string } = parsePostFormContent(await req.text());
+
+	console.log(json);
 
 	if (!("name" in json))
 		return NextResponse.json({ success: false, message: "No property name found in the body.", err: null }, { status: 400 });
 
 	try {
-		ConnectionsManager.addConnection(json as CMOptions);
+		ConnectionsManager.addConnection(json as any);
 	} catch(error: any) {
 		return NextResponse.json({ success: false, message: `There was an error while creating a connection to ${json.name}`, err: error }, { status: 400 });
 	}
 
-	return NextResponse.json({ success: true }, { status: 201 });
+	return new NextResponse(null, { status: 201 });
 }

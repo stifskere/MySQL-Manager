@@ -2,6 +2,7 @@
 
 import NavBar from "@/components/main/NavBar";
 import SqlEditor from "@/components/main/SqlEditor";
+import BottomBar from "@/components/main/BottomBar";
 
 import "./page.css";
 
@@ -20,6 +21,7 @@ export default function Home() {
 					<div className="base-container-style main-console" />
 				</div>
 			</div>
+			<BottomBar />
 		</main>
 	)
 }
