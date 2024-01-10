@@ -1,13 +1,18 @@
 import EventEmitter from "events";
 
+export interface Task {
+	name: string;
+	since: Date;
+}
+
 class BottomBarManager extends EventEmitter {
-	private tasks: { [key: string]: string } = {};
+	private tasks: { [key: string]: Task } = {};
 
 	public addTask(key: string, task: string): void {
 		if (key in this.tasks)
 			return;
 
-		this.tasks[key] = task;
+		this.tasks[key] = { name: task, since: new Date() };
 
 		this.emit("tasksUpdated", this.tasks);
 	}

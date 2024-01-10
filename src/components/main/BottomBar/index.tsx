@@ -1,7 +1,7 @@
 import {ReactElement, useEffect, useState} from "react";
 import {StateTuple} from "@/types/TypeDefinitions";
 
-import bottomBarManager from "@/managers/BottomBarManager";
+import bottomBarManager, {Task} from "@/managers/BottomBarManager";
 
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCaretRight, faCaretUp, faCircleCheck, faDatabase, faSpinner} from "@fortawesome/free-solid-svg-icons";
@@ -10,11 +10,10 @@ import {ProgressBar} from "primereact/progressbar";
 
 import "./index.css";
 
-// TODO: finish task scheduling view.
 
 export default function BottomBar(): ReactElement {
 	const [version, setVersion]: StateTuple<string | undefined> = useState<string | undefined>(undefined);
-	const [tasks, setTasks]: StateTuple<{ [key: string]: string }> = useState<{ [key: string]: string }>({});
+	const [tasks, setTasks]: StateTuple<{ [key: string]: Task }> = useState<{ [key: string]: Task }>({});
 	const [tasksMenuOpen, setTasksMenuOpen]: StateTuple<boolean> = useState(false)
 
 	useEffect((): (() => void) => {
@@ -23,13 +22,25 @@ export default function BottomBar(): ReactElement {
 
 		bottomBarManager.on("tasksUpdated", setTasks);
 
+		const interval: NodeJS.Timeout = setInterval((): void => {
+			// TODO: running for.
+		}, 1000);
+
 		return (): void => {
 			bottomBarManager.off("tasksUpdated", setTasks);
+			clearInterval(interval);
 		};
 	}, [version]);
 
 	const hasVersion: boolean = version !== undefined;
 	const hasTasks: boolean = Object.keys(tasks).length !== 0;
+
+	if (!hasTasks && tasksMenuOpen)
+		setTasksMenuOpen(false);
+
+	function openTaskMenu(): void {
+		setTasksMenuOpen(!tasksMenuOpen)
+	}
 
 	return (
 		<footer className="footer-container">
@@ -43,9 +54,19 @@ export default function BottomBar(): ReactElement {
 			</div>
 			{
 				hasTasks ? (
-					<div className="footer-tasks-container">
+					<div className="footer-tasks-container" onClick={openTaskMenu}>
+						{
+							tasksMenuOpen &&
+							(<div className="footer-tasks-viewer base-container-style">
+								{Object.keys(tasks).map((key: string): ReactElement => (
+									<div key={key}>
+
+									</div>
+								))}
+							</div>)
+						}
 						<ProgressBar mode="indeterminate" style={{ height: '3px', width: '5vw' }} />
-						<FontAwesomeIcon onClick={(): void => setTasksMenuOpen(!tasksMenuOpen)} icon={tasksMenuOpen ? faCaretUp : faCaretRight} />
+						<FontAwesomeIcon icon={tasksMenuOpen ? faCaretUp : faCaretRight} />
 						<p>Running {Object.keys(tasks).length} tasks</p>
 					</div>
 				) : (

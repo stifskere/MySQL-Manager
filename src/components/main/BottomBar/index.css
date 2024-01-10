@@ -27,6 +27,8 @@
 }
 
 .footer-tasks-container {
+	position: relative;
+
 	display: flex;
 
 	gap: 10px;
@@ -35,4 +37,15 @@
 
 	align-items: center;
 	justify-content: center;
+
+	cursor: pointer;
+}
+
+.footer-tasks-viewer {
+	position: absolute;
+
+	min-height: 5vh;
+	width: 10vw;
+
+	transform: translateY(-140%);
 }

@@ -25,6 +25,8 @@
 	color: white;
 
 	position: relative;
+
+	cursor: pointer;
 }
 
 .sql-editor-control-icon:hover::before {

@@ -26,7 +26,13 @@
 	align-items: center;
 }
 
-.nav-bar-anchor {
+.nav-bar-button,
+.nav-bar-play:not(:disabled),
+.nav-bar-options:not(:disabled) {
+	cursor: pointer;
+}
+
+.nav-bar-button {
 	height: 100%;
 
 	background: transparent;
@@ -49,7 +55,7 @@
 	font-size: 0.9em;
 }
 
-.nav-bar-anchor:hover::before,
+.nav-bar-button:hover::before,
 .nav-bar-play:hover::before {
 	content: "";
 

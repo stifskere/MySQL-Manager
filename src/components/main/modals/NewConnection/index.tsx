@@ -6,7 +6,7 @@ import ModalInput from "@/components/main/modals/ModalInput";
 
 import { Button } from "primereact/button";
 
-import {faCircleExclamation} from "@fortawesome/free-solid-svg-icons";
+import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import "./index.css";

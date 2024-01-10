@@ -43,8 +43,8 @@ export default function NavBar({onRun}: Props): ReactElement {
 			{currentModal !== undefined && currentModal}
 			<nav className="nav-bar-main">
 				<div className="nav-bar-button-container">
-					<button onClick={setModal(<NewConnectionModal onCancel={setModal(undefined)} />)} className="nav-bar-anchor">New connection</button>
-					<button onClick={setModal(<AboutModal onCancel={setModal(undefined)} />)} className="nav-bar-anchor">About this</button>
+					<button onClick={setModal(<NewConnectionModal onCancel={setModal(undefined)} />)} className="nav-bar-button">New connection</button>
+					<button onClick={setModal(<AboutModal onCancel={setModal(undefined)} />)} className="nav-bar-button">About this</button>
 				</div>
 				<div className="nav-bar-button-container">
 					<FontAwesomeIcon icon={faPlay} className={`nav-bar-play${disabled ? "-disabled" : ""} fa-xl`} onClick={runHandler}/>
