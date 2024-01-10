@@ -3,11 +3,13 @@ export function isEmptyOrWhitespace(content: string): boolean {
 	return content === null || /^ *$/.test(content);
 }
 
-export function parsePostFormContent(content: string): { [key: string]: string } {
+export function parsePostFormContent<TResponse extends {}>(content: string): TResponse {
 	const result: { [key: string]: string } = {};
 
+	content = decodeURIComponent(content);
+
 	if (isEmptyOrWhitespace(content))
-		return result;
+		return <TResponse>result;
 
 	for (const pair of content.split('&')) {
 		const keyValue: string[] = pair.split('=');
@@ -18,5 +20,5 @@ export function parsePostFormContent(content: string): { [key: string]: string }
 		result[keyValue[0]] = keyValue[1];
 	}
 
-	return result;
+	return <TResponse>result;
 }

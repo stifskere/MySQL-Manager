@@ -1,8 +1,21 @@
 import EventEmitter from "events";
 
 class BottomBarManager extends EventEmitter {
-	public changeBottomText(text: string): void {
-		this.emit("textChanged", text);
+	private tasks: { [key: string]: string } = {};
+
+	public addTask(key: string, task: string): void {
+		if (key in this.tasks)
+			return;
+
+		this.tasks[key] = task;
+
+		this.emit("tasksUpdated", this.tasks);
+	}
+
+	public removeTask(key: string): void {
+		delete this.tasks[key];
+
+		this.emit("tasksUpdated", this.tasks)
 	}
 
 	public get dbVersion(): Promise<string> {

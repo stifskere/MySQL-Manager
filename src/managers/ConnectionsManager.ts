@@ -1,6 +1,6 @@
 import { Connection, ConnectionOptions, Query, QueryError, createConnection } from "mysql2";
 
-export type CMOptions = ConnectionOptions & { name: string };
+export type CMOptions = ConnectionOptions & { connection_name: string };
 
 export default class ConnectionsManager {
 	private static connections: { [key: string]: Connection } = {};
@@ -9,17 +9,21 @@ export default class ConnectionsManager {
 		return Object.keys(this.connections);
 	}
 
-	public static addConnection({name, ...options}: CMOptions): boolean {
-		if (name in this.connections)
-			return false;
+	public static async addConnection({connection_name, ...options}: CMOptions): Promise<void> {
+		if (connection_name in this.connections)
+			return;
 
-		this.connections[name] = createConnection(options satisfies ConnectionOptions);
-		this.connections[name].connect((err: QueryError | null): void => {
-			if (err !== null)
-				throw err;
+		const preConnection: Connection = createConnection(options satisfies ConnectionOptions);
+
+		await new Promise<void>((resolve, reject): void => {
+			preConnection.connect((err: QueryError | null): void => {
+				if (err !== null)
+					return reject(err);
+
+				this.connections[connection_name] = preConnection;
+				resolve();
+			});
 		});
-
-		return true;
 	}
 
 	public static removeConnection(name: string): boolean {

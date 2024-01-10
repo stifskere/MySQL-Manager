@@ -1,13 +1,11 @@
 import {ConnectionData} from "@/types/api-responses/ConnectionData";
-import ConnectionsManager, {CMOptions} from "@/app/api/connections/ConnectionsManager";
+import ConnectionsManager, {CMOptions} from "@/managers/ConnectionsManager";
 
-import {Query} from "mysql2";
+import {Query, QueryError} from "mysql2";
 
 import {NextRequest, NextResponse} from "next/server";
 
-import {parsePostFormContent} from "@/app/helpers";
-
-export function GET(_: Request): NextResponse {
+export function GET(_: NextRequest): NextResponse {
 	const data: ConnectionData = [];
 
 	for (const name of ConnectionsManager.connectionNames) {
@@ -41,18 +39,16 @@ export function GET(_: Request): NextResponse {
 	return NextResponse.json(data);
 }
 
-export async function POST(req: NextRequest): Promise<NextResponse> {
-	const json: { [key: string]: string } = parsePostFormContent(await req.text());
+export async function POST(request: NextRequest): Promise<NextResponse> {
+	const json: CMOptions = await request.json();
 
-	console.log(json);
-
-	if (!("name" in json))
+	if (!("connection_name" in json))
 		return NextResponse.json({ success: false, message: "No property name found in the body.", err: null }, { status: 400 });
 
 	try {
-		ConnectionsManager.addConnection(json as any);
-	} catch(error: any) {
-		return NextResponse.json({ success: false, message: `There was an error while creating a connection to ${json.name}`, err: error }, { status: 400 });
+		await ConnectionsManager.addConnection(json);
+	} catch (error: unknown) {
+		return NextResponse.json({ success: false, message: (<QueryError>error).message }, { status: 400 });
 	}
 
 	return new NextResponse(null, { status: 201 });

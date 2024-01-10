@@ -11,12 +11,6 @@
 	height: 2vh;
 }
 
-.footer-container > p {
-	margin: 0;
-
-	font-size: 0.9em;
-}
-
 .footer-version {
 	display: flex;
 
@@ -26,7 +20,18 @@
 
 	font-size: 0.7em;
 
-	gap: 5px;
+	gap: 10px;
+
+	align-items: center;
+	justify-content: center;
+}
+
+.footer-tasks-container {
+	display: flex;
+
+	gap: 10px;
+
+	font-size: 0.8em;
 
 	align-items: center;
 	justify-content: center;

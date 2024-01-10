@@ -1,9 +1,8 @@
 import React, { ReactElement, useEffect, useState } from "react";
+import { StateTuple } from "@/types/TypeDefinitions";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
-
-import { ConnectionData, Connection } from "@/types/api-responses/ConnectionData";
-import { StateTuple } from "@/types/TypeDefinitions";
 
 import NewConnectionModal from "@/components/main/modals/NewConnection";
 import AboutModal from "@/components/main/modals/AboutModal";
@@ -15,11 +14,11 @@ interface Props {
 }
 
 export default function NavBar({onRun}: Props): ReactElement {
-	const [connections, setConnections]: StateTuple<ConnectionData | undefined> = useState<ConnectionData>();
+	const [connections, setConnections]: StateTuple<string[] | undefined> = useState<string[]>();
 	const [currentModal, setCurrentModal]: StateTuple<ReactElement | undefined> = useState<ReactElement>();
 
 	useEffect((): void => {
-		fetch("/api/connections", { method: "GET" })
+		fetch("/api/data?query=database_names", { method: "GET" })
 			.then(r => r.json())
 			.then(d => setConnections(d));
 	}, []);
@@ -54,7 +53,7 @@ export default function NavBar({onRun}: Props): ReactElement {
 							? (<option>loading...</option>)
 							: ( connections.length === 0
 								? (<option>No connections</option>)
-								: connections.map((connection: Connection, index: number): ReactElement => (<option key={index}>{connection.name}</option>)))
+								: connections.map((connectionName: string, index: number): ReactElement => (<option key={index}>{connectionName}</option>)))
 						}
 					</select>
 				</div>

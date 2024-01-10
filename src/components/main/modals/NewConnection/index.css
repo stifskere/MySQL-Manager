@@ -15,12 +15,25 @@
 	display: flex;
 
 	justify-content: center;
+	align-items: center;
 
 	gap: 15px;
 }
 
 .new-connection-vertical-fields > * {
 	width: 48%;
+}
+
+.new-connection-status {
+	display: flex;
+
+	gap: 15px;
+
+	align-items: center;
+
+	color: #b41600;
+
+	width: 90%;
 }
 
 .new-connection-action-buttons {
