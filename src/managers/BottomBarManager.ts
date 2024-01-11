@@ -1,8 +1,9 @@
 import EventEmitter from "events";
+import { DateTime } from "luxon";
 
 export interface Task {
 	name: string;
-	since: Date;
+	since: DateTime;
 }
 
 class BottomBarManager extends EventEmitter {
@@ -12,7 +13,7 @@ class BottomBarManager extends EventEmitter {
 		if (key in this.tasks)
 			return;
 
-		this.tasks[key] = { name: task, since: new Date() };
+		this.tasks[key] = { name: task, since: DateTime.now() };
 
 		this.emit("tasksUpdated", this.tasks);
 	}

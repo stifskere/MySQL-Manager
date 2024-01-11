@@ -5,7 +5,7 @@ import { NextFont } from "next/dist/compiled/@next/font";
 
 import WithChildren from "@/types/props/WithChildren";
 
-import {ReactElement} from "react";
+import { ReactElement } from "react";
 
 import "primereact/resources/themes/bootstrap4-dark-purple/theme.css";
 import "./layout.css";

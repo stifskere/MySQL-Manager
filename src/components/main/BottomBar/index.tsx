@@ -9,6 +9,7 @@ import {faCaretRight, faCaretUp, faCircleCheck, faDatabase, faSpinner} from "@fo
 import {ProgressBar} from "primereact/progressbar";
 
 import "./index.css";
+import {DateTime} from "luxon";
 
 
 export default function BottomBar(): ReactElement {
@@ -23,17 +24,29 @@ export default function BottomBar(): ReactElement {
 		bottomBarManager.on("tasksUpdated", setTasks);
 
 		const interval: NodeJS.Timeout = setInterval((): void => {
-			// TODO: running for.
+			for (const task in tasks) {
+				const element: HTMLParagraphElement | null
+					= document.getElementById(`task-${task}-counter`) as HTMLParagraphElement | null;
+
+				if (element === null)
+					continue;
+
+				element.innerText = "running for: " + DateTime.now()
+					.diff(tasks[task].since)
+					.toFormat("hh'h':mm'm':ss's'")
+					.replace(/0{1,2}[mh]:?/g, "")
+			}
 		}, 1000);
 
 		return (): void => {
 			bottomBarManager.off("tasksUpdated", setTasks);
 			clearInterval(interval);
 		};
-	}, [version]);
+	}, [tasks, version]);
 
 	const hasVersion: boolean = version !== undefined;
 	const hasTasks: boolean = Object.keys(tasks).length !== 0;
+	const tasksNo: number = Object.keys(tasks).length;
 
 	if (!hasTasks && tasksMenuOpen)
 		setTasksMenuOpen(false);
@@ -59,15 +72,16 @@ export default function BottomBar(): ReactElement {
 							tasksMenuOpen &&
 							(<div className="footer-tasks-viewer base-container-style">
 								{Object.keys(tasks).map((key: string): ReactElement => (
-									<div key={key}>
-
+									<div key={key} className="footer-tasks-task">
+										<p><FontAwesomeIcon icon={faSpinner} className="fa-spin footer-tasks-task-spinner"/> {tasks[key].name}</p>
+										<small id={`task-${key}-counter`}>running for: 0s</small>
 									</div>
 								))}
 							</div>)
 						}
 						<ProgressBar mode="indeterminate" style={{ height: '3px', width: '5vw' }} />
 						<FontAwesomeIcon icon={tasksMenuOpen ? faCaretUp : faCaretRight} />
-						<p>Running {Object.keys(tasks).length} tasks</p>
+						<p>Running {tasksNo} {tasksNo === 1 ? "task" : "tasks"}</p>
 					</div>
 				) : (
 					<div className="footer-tasks-container">

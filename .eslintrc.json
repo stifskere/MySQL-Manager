@@ -1,6 +1,7 @@
 {
   "extends": "next/core-web-vitals",
   "rules": {
-    "indent": ["warn", "tab"]
+    "indent": ["warn", "tab"],
+    "prefer-destructuring": "warn"
   }
 }
