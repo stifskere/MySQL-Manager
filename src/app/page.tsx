@@ -13,7 +13,11 @@ import "./page.css";
 export default function Home(): ReactElement {
 	useEffect((): (() => void) => {
 		bottomBarManager.addTask("loading", "Loading main stuff...");
-		return (): void => bottomBarManager.removeTask("loading");
+		bottomBarManager.addTask("thing", "yeah yeah, whatever...")
+		return (): void => {
+			bottomBarManager.removeTask("loading");
+			bottomBarManager.removeTask("thing");
+		};
 	}, []);
 
 	function onRunCode(connection: string): void {
