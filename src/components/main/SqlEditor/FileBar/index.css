@@ -1,0 +1,101 @@
+
+.file-bar-main {
+	display: flex;
+
+	height: 100%;
+}
+
+.file-bar-file {
+	display: flex;
+
+	align-items: center;
+	justify-content: center;
+
+	gap: 10px;
+
+	padding: 5px 15px;
+
+	cursor: pointer;
+}
+
+.file-bar-file > p {
+	margin: 0;
+
+	padding: 0.3vh 0;
+}
+
+.file-bar-file-close {
+	color: #65656570;
+
+	transition: color 0.2s;
+}
+
+.file-bar-file-close:hover {
+	color: white;
+}
+
+.file-bar-file-current {
+	border-bottom: 1px white solid;
+}
+
+.file-bar-edit-input {
+	background: #65656570;
+	border: 1px solid black;
+	outline: #65656570;
+}
+
+.file-bar-controls {
+	height: 5%;
+	width: 100%;
+
+	display: flex;
+
+	gap: 30px;
+
+	align-items: center;
+	justify-content: flex-start;
+
+	padding-left: 15px
+}
+
+.file-bar-controls-buttons {
+	display: flex;
+
+	gap: 15px;
+
+	position: relative;
+}
+
+.file-bar-controls-buttons::after {
+	content: "";
+
+	position: absolute;
+
+	left: 130%;
+
+	height: 100%;
+	width: 2px;
+
+	background-color: #3D3D3D70;
+}
+
+.file-bar-control-icon {
+	color: white;
+
+	position: relative;
+
+	cursor: pointer;
+}
+
+.file-bar-control-icon:hover::before {
+	content: "";
+
+	width: 100%;
+	height: 2px;
+
+	background-color: white;
+
+	position: absolute;
+
+	top: -20%
+}

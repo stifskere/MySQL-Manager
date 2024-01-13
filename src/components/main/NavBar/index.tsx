@@ -4,7 +4,7 @@ import { StateTuple } from "@/types/TypeDefinitions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
 
-import NewConnectionModal from "@/components/main/modals/NewConnection";
+import NewConnectionModal from "../modals/NewConnectionModal";
 import AboutModal from "@/components/main/modals/AboutModal";
 
 import "./index.css";
