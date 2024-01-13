@@ -1,25 +1,17 @@
 "use client";
 
-import {ReactElement, useEffect} from "react";
+import {ReactElement} from "react";
 
 import NavBar from "@/components/main/NavBar";
 import SqlEditor from "@/components/main/SqlEditor";
 import BottomBar from "@/components/main/BottomBar";
-
-import bottomBarManager from "@/managers/BottomBarManager";
+import DatabaseNavigator from "@/components/main/DatabaseNavigator";
 
 import "./page.css";
 
-export default function Home(): ReactElement {
-	useEffect((): (() => void) => {
-		bottomBarManager.addTask("loading", "Loading main stuff...");
-		bottomBarManager.addTask("thing", "yeah yeah, whatever...")
-		return (): void => {
-			bottomBarManager.removeTask("loading");
-			bottomBarManager.removeTask("thing");
-		};
-	}, []);
+// TODO: replace everything for react icons.
 
+export default function Home(): ReactElement {
 	function onRunCode(connection: string): void {
 		console.log(connection);
 	}
@@ -28,7 +20,7 @@ export default function Home(): ReactElement {
 		<main className="main-container">
 			<NavBar onRun={onRunCode}/>
 			<div className="main-horizontal">
-				<div className="base-container-style main-file-explorer"></div>
+				<DatabaseNavigator className="base-container-style main-connection-explorer" />
 				<div className="main-vertical">
 					<SqlEditor/>
 					<div className="base-container-style main-console" />

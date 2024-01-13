@@ -1,49 +1,83 @@
-import {ConnectionData} from "@/types/api-responses/ConnectionData";
+import {Connection} from "@/types/api-responses/ConnectionData";
 import ConnectionsManager, {CMOptions} from "@/managers/ConnectionsManager";
 
-import {Query, QueryError} from "mysql2";
+import {QueryError} from "mysql2";
+import {Packets} from "@/types/TypeDefinitions";
 
 import {NextRequest, NextResponse} from "next/server";
+import {BaseResponse} from "@/types/api-responses/BaseResponse";
 
-export function GET(_: NextRequest): NextResponse {
-	const data: ConnectionData = [];
+export async function GET(_: NextRequest): Promise<NextResponse<BaseResponse<string | { [name: string]: Connection }>>> {
+	const databases: { [name: string]: Connection } = {};
 
 	for (const name of ConnectionsManager.connectionNames) {
-		const table: Query[] | undefined = ConnectionsManager.queryConnection(name, [
-			`SELECT TABLE_NAME, COLUMN_NAME, COLUMN_DEFAULT, IS_NULLABLE, COLUMN_TYPE, COLUMN_KEY, EXTRA FROM information_schema.COLUMNS;`
-		]);
+		const result: Packets[] | undefined = await ConnectionsManager.queryConnection(name,
+			`SELECT 
+				TABLE_SCHEMA AS database_name,
+				TABLE_NAME AS table_name,
+				COLUMN_NAME AS column_name,
+				COLUMN_TYPE AS column_type,
+				IS_NULLABLE = 'NO' AS is_not_null,
+				COLUMN_KEY = 'PRI' AS is_primary_key,
+				COLUMN_KEY = 'UNI' AS is_unique,
+				EXTRA LIKE '%auto_increment%' AS is_auto_increment,
+				COLUMN_DEFAULT AS default_value
+			FROM
+				INFORMATION_SCHEMA.COLUMNS
+			ORDER BY
+				TABLE_SCHEMA,
+				TABLE_NAME,
+				ORDINAL_POSITION;`
+		);
 
-		if (table === undefined)
-			return NextResponse.json({
-				message: "One or more connections are not available."
-			}, {
-				status: 500
-			});
+		if (result === undefined)
+			continue;
 
-		data.push({
-			name,
-			tables: table.map((column: any) => ({
-				columns: [{
-					name: column["COLUMN_NAME"],
-					type: column["COLUMN_TYPE"],
-					notNull: column["IS_NULLABLE"] === 'NO',
-					unique: column["COLUMN_KEY"] === 'UNI',
-					autoIncrement: column["EXTRA"] === 'auto_increment',
-					default: column["COLUMN_DEFAULT"] !== null,
-					primaryKey: column["COLUMN_KEY"] === 'PRI',
-				}]
-			}))
-		});
+		const connection: Connection = {
+			databases: {},
+		};
+
+		for (let row of result[0] as any) {
+			const dbName: string = row["database_name"];
+			const tableName: string = row["table_name"];
+			const columnName: string = row["column_name"];
+
+			if (!(dbName in connection.databases)) {
+				connection.databases[dbName] = {
+					tables: {}
+				}
+			}
+
+			if (!(tableName in connection.databases[dbName].tables)) {
+				connection.databases[dbName].tables[tableName] = {
+					columns: {}
+				}
+			}
+
+			connection.databases[dbName].tables[tableName].columns[columnName] = {
+				type: row["column_type"],
+				notNull: row["is_not_null"] === 1,
+				unique: row["is_unique"] === 1,
+				autoIncrement: row["is_auto_increment"] === 1,
+				default: row["default_value"] === "" ? null : row["default_value"],
+				primaryKey: row["is_primary_key"] === 1,
+			}
+		}
+
+		databases[name] = connection;
 	}
 
-	return NextResponse.json(data);
+	return NextResponse.json({ success: true, message: databases });
 }
 
-export async function POST(request: NextRequest): Promise<NextResponse> {
+export async function POST(request: NextRequest): Promise<NextResponse<BaseResponse<string | null>>> {
 	const json: CMOptions = await request.json();
 
 	if (!("connection_name" in json))
 		return NextResponse.json({ success: false, message: "No property name found in the body.", err: null }, { status: 400 });
+
+	if (json.host === "localhost" || json.host === "127.0.0.1")
+		return NextResponse.json({ success: false, message: "Localhost and/or 127.0.0.1 are invalid addresses for a remote host." })
 
 	try {
 		await ConnectionsManager.addConnection(json);
@@ -51,5 +85,5 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 		return NextResponse.json({ success: false, message: (<QueryError>error).message }, { status: 400 });
 	}
 
-	return new NextResponse(null, { status: 201 });
+	return NextResponse.json({ success: true, message: null }, { status: 201 });
 }

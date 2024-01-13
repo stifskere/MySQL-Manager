@@ -1,4 +1,5 @@
 import {ReactElement, useEffect, useState} from "react";
+import {StateTuple} from "@/types/TypeDefinitions";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDownload, faFile, faUpload } from "@fortawesome/free-solid-svg-icons";
@@ -6,7 +7,8 @@ import { faDownload, faFile, faUpload } from "@fortawesome/free-solid-svg-icons"
 import { Editor } from "@monaco-editor/react";
 
 import "./index.css";
-import {StateTuple} from "@/types/TypeDefinitions";
+
+// TODO: add multiple file support in the top bar, no need for a navigator, new file doesn't replace old, only closing it, saving will save selected and uploading will add new.
 
 export default function SqlEditor(): ReactElement {
 	const [editorValue, setEditorValue]: StateTuple<string> = useState<string>(
