@@ -1,4 +1,5 @@
 import {
+	DragEvent,
 	FocusEvent,
 	KeyboardEvent,
 	MutableRefObject,
@@ -14,6 +15,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faDownload, faFile, faUpload, faXmark} from "@fortawesome/free-solid-svg-icons";
 
 import "./index.css";
+import bottomBarManager from "@/managers/BottomBarManager";
 
 interface FileBarProps {
 	onChange: ((content: string, saveCurrent: ((content: string) => void)) => void);
@@ -91,12 +93,14 @@ export default function FileBar({onChange}: FileBarProps): ReactElement {
 	}
 
 	function onDownload(): void {
+		bottomBarManager.addTask("dw-file", "Downloading file");
 		const downloadElement: HTMLAnchorElement = document.createElement("a");
 		downloadElement.href = URL.createObjectURL(new Blob([files.current[currentFile].content], {type: 'text/plain'}));
-		downloadElement.download = "script.sql";
+		downloadElement.download = files.current[currentFile].name;
 		document.body.appendChild(downloadElement);
 		downloadElement.click();
 		document.body.removeChild(downloadElement);
+		bottomBarManager.removeTask("dw-file");
 	}
 
 	function onUpload(): void {
@@ -166,6 +170,16 @@ export default function FileBar({onChange}: FileBarProps): ReactElement {
 		};
 	}
 
+	function dragStart(event: DragEvent<HTMLDivElement>): void {
+		event.dataTransfer.setData("text", (event.target as HTMLDivElement).id );
+	}
+
+	function dragOver(event: DragEvent<HTMLDivElement>): void {
+		event.preventDefault();
+
+		const target: HTMLDivElement = event.target as HTMLDivElement;
+	}
+
 	const moreThanOneFile: boolean = files.current.length > 1;
 
 	return (
@@ -177,7 +191,8 @@ export default function FileBar({onChange}: FileBarProps): ReactElement {
 			</div>
 			<div className="file-bar-main">
 				{files.current.map(({name, isRenaming}: File, key: number): ReactElement => (
-					<div onAuxClick={moreThanOneFile ? closeFile(key) : undefined} key={key} className={`file-bar-file ${currentFile === key && "file-bar-file-current"}`}>
+					<div draggable onAuxClick={moreThanOneFile ? closeFile(key) : undefined} onDragStart={dragStart} onDragOver={dragOver}
+						 key={key} className={`file-bar-file ${currentFile === key && "file-bar-file-current"}`}>
 						{isRenaming
 							? <input onBlur={onBlurRename(key)} onKeyDown={onSubmitRename(key)} autoFocus className="file-bar-edit-input" defaultValue={name}/>
 							: <p onClick={changeFile(key)} onDoubleClick={renameFile(key)} >{name}</p>}
