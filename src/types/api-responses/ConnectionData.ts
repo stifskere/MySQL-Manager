@@ -5,9 +5,9 @@ export interface Connection {
 
 export interface Database {
 	tables: { [name: string]: TableLike };
-	views: { [name: string]: TableLike }; // TODO: implementation same as tables, show the columns that the view would retrieve
-	triggers: { [name: string]: Trigger }; // TODO: implementation for [event, timing, table, logic as sql]
-	routines: { [name: string]: Routine }; // TODO; implementation just show the sql in another editor
+	views: { [name: string]: TableLike };
+	triggers: { [name: string]: Trigger };
+	routines: { [name: string]: Routine };
 }
 
 export interface Trigger {

@@ -3,6 +3,11 @@
 	display: flex;
 
 	height: 100%;
+
+	overflow: scroll;
+
+	-ms-overflow-style: none;
+	scrollbar-width: none;
 }
 
 .file-bar-file {
@@ -55,7 +60,7 @@
 	align-items: center;
 	justify-content: flex-start;
 
-	padding-left: 15px
+	padding: 0 15px;
 }
 
 .file-bar-controls-buttons {

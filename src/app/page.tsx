@@ -20,7 +20,7 @@ export default function Home(): ReactElement {
 		<main className="main-container">
 			<NavBar onRun={onRunCode}/>
 			<div className="main-horizontal">
-				<DatabaseNavigator className="base-container-style main-connection-explorer" />
+				<DatabaseNavigator />
 				<div className="main-vertical">
 					<SqlEditor/>
 					<div className="base-container-style main-console" />

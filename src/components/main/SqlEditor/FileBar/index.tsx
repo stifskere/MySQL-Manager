@@ -84,9 +84,9 @@ export default function FileBar({onChange}: FileBarProps): ReactElement {
 			if (nextFile === currentFile)
 				forceReRender();
 
+			saveInStorage();
 			setCurrentFile(nextFile);
-
-			onChange(files.current[nextFile].content, saveCurrent)
+			onChange(files.current[nextFile].content, saveCurrent);
 		}
 	}
 
@@ -129,7 +129,8 @@ export default function FileBar({onChange}: FileBarProps): ReactElement {
 			isRenaming: true
 		});
 
-		forceReRender();
+		setCurrentFile(files.current.length - 1);
+		onChange(files.current[files.current.length - 1].content, saveCurrent);
 	}
 
 	function renameFile(index: number): (() => void) {

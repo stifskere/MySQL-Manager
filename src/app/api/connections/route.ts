@@ -11,7 +11,7 @@ export async function GET(_: NextRequest): Promise<NextResponse<BaseResponse<str
 	const databases: { [name: string]: Connection } = {};
 
 	for (const name of ConnectionsManager.connectionNames) {
-		const result: Packets[] | undefined = await ConnectionsManager.queryConnection(name,
+		const rowResult: Packets[] | undefined = await ConnectionsManager.queryConnection(name,
 			`SELECT 
 				TABLE_SCHEMA AS database_name,
 				TABLE_NAME AS table_name,
@@ -30,21 +30,24 @@ export async function GET(_: NextRequest): Promise<NextResponse<BaseResponse<str
 				ORDINAL_POSITION;`
 		);
 
-		if (result === undefined)
+		if (rowResult === undefined)
 			continue;
 
 		const connection: Connection = {
 			databases: {},
 		};
 
-		for (let row of result[0] as any) {
+		for (let row of rowResult[0] as any) {
 			const dbName: string = row["database_name"];
 			const tableName: string = row["table_name"];
 			const columnName: string = row["column_name"];
 
 			if (!(dbName in connection.databases)) {
 				connection.databases[dbName] = {
-					tables: {}
+					tables: {},
+					routines: {},
+					triggers: {},
+					views: {}
 				}
 			}
 
@@ -86,4 +89,9 @@ export async function POST(request: NextRequest): Promise<NextResponse<BaseRespo
 	}
 
 	return NextResponse.json({ success: true, message: null }, { status: 201 });
+}
+
+
+export function PUT(request: NextRequest): NextResponse<BaseResponse<string>> {
+	return NextResponse.json({ success: true, message: "" });
 }

@@ -1,0 +1,16 @@
+
+.connection-explorer-main {
+	height: 100%;
+	width: 15%;
+
+	flex-shrink: 0;
+
+	overflow: scroll;
+}
+
+.connection-explorer-tree {
+	height: 100%;
+
+	background-color: transparent;
+	border-color: transparent;
+}
