@@ -1,4 +1,5 @@
-import { Connection, ConnectionOptions, Query, QueryError, createConnection } from "mysql2";
+import { Connection, ConnectionOptions, createConnection} from "mysql2/promise";
+import {Packets} from "@/types/TypeDefinitions";
 
 export type CMOptions = ConnectionOptions & { connection_name: string };
 
@@ -11,19 +12,12 @@ export default class ConnectionsManager {
 
 	public static async addConnection({connection_name, ...options}: CMOptions): Promise<void> {
 		if (connection_name in this.connections)
-			return;
+			throw { message: `A connection named "${connection_name}" already exists.` };
 
-		const preConnection: Connection = createConnection(options satisfies ConnectionOptions);
+		const connection: Connection = await createConnection(options satisfies ConnectionOptions);
+		await connection.connect();
 
-		await new Promise<void>((resolve, reject): void => {
-			preConnection.connect((err: QueryError | null): void => {
-				if (err !== null)
-					return reject(err);
-
-				this.connections[connection_name] = preConnection;
-				resolve();
-			});
-		});
+		this.connections[connection_name] = connection;
 	}
 
 	public static removeConnection(name: string): boolean {
@@ -35,15 +29,15 @@ export default class ConnectionsManager {
 		return true;
 	}
 
-	public static queryConnection(name: string, commands: string[]): Query[] | undefined {
+	public static async queryConnection(name: string, ...commands: string[]): Promise<Packets[] | undefined> {
 		if (!(name in this.connections))
 			return undefined;
 
-		const connection: Connection = this.connections[name];
-		const result: Query[] = [];
+		const result: Packets[] = [];
 
 		for (const command of commands) {
-			result.push(connection.query(command));
+			const [rows] = await this.connections[name].query(command);
+			result.push(rows);
 		}
 
 		return result;

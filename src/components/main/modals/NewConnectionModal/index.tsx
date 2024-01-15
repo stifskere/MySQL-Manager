@@ -39,8 +39,9 @@ export default function NewConnectionModal({onCancel}: ModalProps): ReactElement
 	}
 
 	function onKeyDown(event: KeyboardEvent<HTMLFormElement>): void {
+		event.preventDefault();
+
 		if (event.code === "Enter") {
-			event.preventDefault();
 			event.currentTarget.submit();
 		}
 	}
@@ -51,12 +52,12 @@ export default function NewConnectionModal({onCancel}: ModalProps): ReactElement
 				<h1>New connection</h1>
 				<form onSubmit={connect} onKeyDown={onKeyDown}>
 					<div className="base-container-style new-connection-container">
-						<ModalInput name="connection_name" required={true} text="Connection name" help="Connection handler name, doesn't interfer with MySQL settings."/>
+						<ModalInput name="connection_name" required text="Connection name" help="Connection handler name, doesn't interfer with MySQL settings."/>
 						<div className="new-connection-vertical-fields">
-							<ModalInput name="host" required={true} text="Host" placeholder="0.0.0.0"/>
-							<ModalInput name="port" type="number" required={true} text="Port" placeholder="3306" default="3306" />
+							<ModalInput name="host" required text="Host" placeholder="0.0.0.0"/>
+							<ModalInput name="port" type="number" required text="Port" placeholder="3306" default="3306" />
 						</div>
-						<ModalInput name="database" required={true} text="Database" />
+						<ModalInput name="database" required text="Database" />
 						<div className="new-connection-vertical-fields">
 							<ModalInput name="user" text="User" />
 							<ModalInput name="password" text="Password" type="password" />

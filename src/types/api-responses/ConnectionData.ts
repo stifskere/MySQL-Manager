@@ -1,21 +1,32 @@
 
-// TODO: adapt it to connection that has multiple databases
-
-export type ConnectionData = Connection[];
-
 export interface Connection {
-	name: string;
-	tables: Table[];
+	databases: { [name: string]: Database };
 }
 
-export interface Table {
-	columns: Column[];
+export interface Database {
+	tables: { [name: string]: TableLike };
+	views: { [name: string]: TableLike };
+	triggers: { [name: string]: Trigger };
+	routines: { [name: string]: Routine };
+}
+
+export interface Trigger {
+	timing: "INSERT" | "UPDATE" | "DELETE";
+	event: "BEFORE" | "AFTER";
+	table: string;
+}
+
+export interface Routine {
+	type: "FUNCTION" | "PROCEDURE";
+	sql: string;
+}
+
+export interface TableLike {
+	columns: { [name: string]: Column };
 }
 
 export interface Column {
-	name: string;
 	type: string;
-
 	notNull: boolean;
 	unique: boolean;
 	autoIncrement: boolean;
