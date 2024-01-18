@@ -9,6 +9,8 @@ import {Column, Connection, Database, TableLike} from "@/types/api-responses/Con
 
 import BottomBarManager from "@/managers/BottomBarManager";
 
+import { TbCloudDataConnection } from "react-icons/tb";
+
 import "./index.css";
 
 // TODO: style and maybe change tree semantics
@@ -32,25 +34,22 @@ export default function DatabaseNavigator(): ReactElement {
 				setNodes(Object.entries(connections.message! satisfies { [name: string]: Connection }).map(([name, connection]: [string, Connection]): TreeNode => ({
 					label: name,
 					key: name,
-					children: [{
-						label: "Databases",
-						key: `${name}-databases`,
-						children: Object.entries(connection.databases ?? {}).map(([name, database]: [string, Database]): TreeNode => ({
-							label: name,
-							key: name,
-							children: [{
-								label: "Tables",
-								key: `${name}-tables`,
-								children: Object.entries(database.tables).map(([name, table]: [string, TableLike]): TreeNode => ({
-									label: name,
-									key: name,
-									children: Object.entries(table.columns).map(([name, column]: [string, Column]): TreeNode => ({
-										label: name
-									}))
+					icon: (): ReactElement => <TbCloudDataConnection />,
+					children: Object.entries(connection.databases ?? {}).map(([name, database]: [string, Database]): TreeNode => ({
+						label: name,
+						key: name,
+						children: [{
+							label: "Tables",
+							key: `${name}-tables`,
+							children: Object.entries(database.tables).map(([name, table]: [string, TableLike]): TreeNode => ({
+								label: name,
+								key: name,
+								children: Object.entries(table.columns).map(([name, column]: [string, Column]): TreeNode => ({ //TODO: add column icons
+									label: name
 								}))
-							}]
-						}))
-					}]
+							}))
+						}]
+					}))
 				})));
 			})
 			.then((): void => {

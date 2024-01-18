@@ -102,7 +102,7 @@ export async function PUT(request: NextRequest): Promise<NextResponse<BaseRespon
 	try {
 		result = await ConnectionsManager.queryConnection(json.connection, ...json.sql);
 	} catch (error: any) {
-		return NextResponse.json({ success: false, message: error })
+		return NextResponse.json({ success: false, message: error });
 	}
 
 	return result === undefined
