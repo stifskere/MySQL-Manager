@@ -42,3 +42,7 @@
 .about-modal-made-with > div > a:hover {
 	color: mediumpurple;
 }
+
+.about-modal-icon {
+	font-size: 3em;
+}

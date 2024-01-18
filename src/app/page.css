@@ -6,13 +6,14 @@
 
 	gap: 15px;
 
-	width: 99vw;
-	height: 98vh;
+	padding: 1vh 0.5vw;
+
+	width: 100vw;
+	height: 100vh;
 }
 
 .main-horizontal {
-	height: 100vh;
-	width: 100%;
+	height: 100%;
 
 	display: flex;
 
@@ -23,20 +24,15 @@
 
 .main-vertical {
 	height: 100%;
-	width: 100%;
-
-	max-width: 84%;
+	width: 85%;
 
 	display: flex;
 
 	flex-direction: column;
 
 	gap: 15px;
-
-	flex-shrink: 0;
-	flex-grow: 0;
 }
 
 .main-console {
-	height: 70%;
+	flex-grow: 1;
 }

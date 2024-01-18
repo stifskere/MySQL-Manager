@@ -7,9 +7,17 @@ import { Editor } from "@monaco-editor/react";
 
 import "./index.css";
 
-export default function SqlEditor(): ReactElement {
+interface SqlEditorProps {
+	onChangeSql: ((sql: string) => void);
+}
+
+export default function SqlEditor({onChangeSql}: SqlEditorProps): ReactElement {
 	const [content, setContent]: StateTuple<string> = useState<string>("");
-	const saveFunction: MutableRefObject<((content: string) => void)> = useRef<(content: string) => void>(() => {});
+	const saveFunction: MutableRefObject<((content: string) => void)> = useRef<(content: string) => void>((): void => {});
+
+	useEffect((): void => {
+		onChangeSql(content);
+	}, [content, onChangeSql]);
 
 	function onChangeFile(content: string, saveCurrent: ((content: string) => void)): void {
 		setContent(content);
@@ -17,8 +25,10 @@ export default function SqlEditor(): ReactElement {
 	}
 
 	function onChangeText(value?: string): void {
-		if (value !== undefined)
+		if (value !== undefined) {
 			saveFunction.current(value);
+			onChangeSql(value);
+		}
 	}
 
 	return (

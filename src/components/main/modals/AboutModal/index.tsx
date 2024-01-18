@@ -4,11 +4,11 @@ import ModalProps from "@/types/props/ModalProps";
 
 import {Button} from "primereact/button";
 
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faGithub, faReact} from "@fortawesome/free-brands-svg-icons";
+import {FaGithub} from "react-icons/fa6";
+import {IoLogoFirebase} from "react-icons/io5";
 
 import "./index.css";
-import {faServer} from "@fortawesome/free-solid-svg-icons";
+import {TbBrandNextjs} from "react-icons/tb";
 
 export default function AboutModal({onCancel}: ModalProps): ReactElement {
 	return (
@@ -45,21 +45,21 @@ export default function AboutModal({onCancel}: ModalProps): ReactElement {
 						<div>
 							<p>Made using</p>
 							<a href="https://react.dev/" target="_blank">
-								<FontAwesomeIcon icon={faReact} size="3x" />
+								<TbBrandNextjs className="about-modal-icon" />
 							</a>
 							<small>ReactJS + NextJS</small>
 						</div>
 						<div>
 							<p>Hosted on</p>
 							<a href="https://firebase.google.com/" target="_blank">
-								<FontAwesomeIcon icon={faServer} size="3x" />
+								<IoLogoFirebase className="about-modal-icon" />
 							</a>
 							<small>firebase</small>
 						</div>
 						<div>
 							<p>Source code</p>
 							<a href="https://github.com/stifskere/MySQL-Manager" target="_blank">
-								<FontAwesomeIcon icon={faGithub} size="3x" />
+								<FaGithub className="about-modal-icon" />
 							</a>
 							<small>GitHub</small>
 						</div>

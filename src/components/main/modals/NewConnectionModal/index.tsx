@@ -1,4 +1,9 @@
-import { FormEvent, KeyboardEvent, ReactElement, useState } from "react";
+import {
+	FormEvent,
+	KeyboardEvent,
+	ReactElement,
+	useState
+} from "react";
 import { StateTuple } from "@/types/TypeDefinitions";
 
 import ModalProps from "@/types/props/ModalProps";
@@ -6,8 +11,7 @@ import ModalInput from "@/components/main/modals/ModalInput";
 
 import { Button } from "primereact/button";
 
-import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { FaCircleExclamation } from "react-icons/fa6";
 
 import "./index.css";
 
@@ -16,6 +20,10 @@ export default function NewConnectionModal({onCancel}: ModalProps): ReactElement
 
 	function connect(event: FormEvent): void {
 		event.preventDefault();
+
+		if (!(event.target as HTMLFormElement).checkValidity()) {
+			return;
+		}
 
 		const inputElements: HTMLCollectionOf<HTMLInputElement>
 			= event.currentTarget.getElementsByTagName("input");
@@ -38,11 +46,10 @@ export default function NewConnectionModal({onCancel}: ModalProps): ReactElement
 
 	}
 
-	function onKeyDown(event: KeyboardEvent<HTMLFormElement>): void {
-		event.preventDefault();
-
+	function onKeyDown(event: KeyboardEvent<HTMLInputElement>): void {
 		if (event.code === "Enter") {
-			event.currentTarget.submit();
+			event.preventDefault();
+			(document.getElementById("new-connection-form") as HTMLFormElement).submit();
 		}
 	}
 
@@ -50,25 +57,25 @@ export default function NewConnectionModal({onCancel}: ModalProps): ReactElement
 		<div className="modal-background">
 			<div className="modal-tt-container">
 				<h1>New connection</h1>
-				<form onSubmit={connect} onKeyDown={onKeyDown}>
+				<form onSubmit={connect} id="new-connection-form">
 					<div className="base-container-style new-connection-container">
-						<ModalInput name="connection_name" required text="Connection name" help="Connection handler name, doesn't interfer with MySQL settings."/>
+						<ModalInput onKeyDown={onKeyDown} name="connection_name" required text="Connection name" help="Connection handler name, doesn't interfer with MySQL settings."/>
 						<div className="new-connection-vertical-fields">
-							<ModalInput name="host" required text="Host" placeholder="0.0.0.0"/>
-							<ModalInput name="port" type="number" required text="Port" placeholder="3306" default="3306" />
+							<ModalInput onKeyDown={onKeyDown} name="host" required text="Host" placeholder="0.0.0.0"/>
+							<ModalInput onKeyDown={onKeyDown} name="port" type="number" required text="Port" placeholder="3306" default="3306" />
 						</div>
-						<ModalInput name="database" required text="Database" />
+						<ModalInput onKeyDown={onKeyDown} name="database" required text="Database" />
 						<div className="new-connection-vertical-fields">
-							<ModalInput name="user" text="User" />
-							<ModalInput name="password" text="Password" type="password" />
+							<ModalInput onKeyDown={onKeyDown} name="user" text="User" />
+							<ModalInput onKeyDown={onKeyDown} name="password" text="Password" type="password" />
 						</div>
 						<div className="new-connection-vertical-fields">
 							<div className="new-connection-status" style={{visibility: statusText !== undefined ? "visible" : "hidden"}}>
-								<FontAwesomeIcon icon={faCircleExclamation} />
+								<FaCircleExclamation />
 								<p>{statusText}</p>
 							</div>
 							<div className="new-connection-action-buttons">
-								<Button onClick={onCancel} label="Cancel" severity="secondary" text raised/>
+								<Button type="button" onClick={onCancel} label="Cancel" severity="secondary" text raised/>
 								<Button label="Connect" severity="success" text raised type="submit"/>
 							</div>
 						</div>

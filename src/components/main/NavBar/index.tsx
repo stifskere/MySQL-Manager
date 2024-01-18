@@ -1,11 +1,12 @@
 import React, { ReactElement, useEffect, useState } from "react";
 import { StateTuple } from "@/types/TypeDefinitions";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlay } from "@fortawesome/free-solid-svg-icons";
+import { FaPlay } from "react-icons/fa";
 
 import NewConnectionModal from "../modals/NewConnectionModal";
 import AboutModal from "@/components/main/modals/AboutModal";
+
+import bottomBarManager from "@/managers/BottomBarManager";
 
 import "./index.css";
 
@@ -18,9 +19,11 @@ export default function NavBar({onRun}: Props): ReactElement {
 	const [currentModal, setCurrentModal]: StateTuple<ReactElement | undefined> = useState<ReactElement>();
 
 	useEffect((): void => {
+		bottomBarManager.addTask("fetch-connections", "Fetching connections");
 		fetch("/api/data?query=database_names", { method: "GET" })
-			.then(r => r.json())
-			.then(d => setConnections(d));
+			.then((r: Response): Promise<string[]> => r.json())
+			.then((d: string[]): void => setConnections(d))
+			.then(() => bottomBarManager.removeTask("fetch-connections"));
 	}, []);
 
 	function runHandler(): void {
@@ -47,7 +50,7 @@ export default function NavBar({onRun}: Props): ReactElement {
 					<button onClick={setModal(<AboutModal onCancel={setModal(undefined)} />)} className="nav-bar-button">About this</button>
 				</div>
 				<div className="nav-bar-button-container">
-					<FontAwesomeIcon icon={faPlay} className={`nav-bar-play${disabled ? "-disabled" : ""} fa-xl`} onClick={runHandler}/>
+					<FaPlay className={`nav-bar-play${disabled ? "-disabled" : ""} fa-xl`} onClick={runHandler}/>
 					<select id="nav-bar-connection-select" disabled={disabled} className="nav-bar-options">
 						{connections === undefined
 							? (<option>loading...</option>)

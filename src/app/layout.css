@@ -3,6 +3,8 @@ body, html {
     background: black;
 
     overflow: hidden;
+
+    margin: 0;
 }
 
 a {

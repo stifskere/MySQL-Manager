@@ -21,7 +21,7 @@ export default function DatabaseNavigator(): ReactElement {
 		if (ready)
 			return;
 
-		BottomBarManager.addTask("db-map", "introspecting connections")
+		BottomBarManager.addTask("db-map", "introspecting connections");
 
 		fetch("/api/connections", { method: "GET" })
 			.then((response: Response): Promise<BaseResponse<{ [name: string]: Connection } | string>> => response.json())

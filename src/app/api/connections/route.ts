@@ -6,7 +6,9 @@ import {Packets} from "@/types/TypeDefinitions";
 
 import {NextRequest, NextResponse} from "next/server";
 import {BaseResponse} from "@/types/api-responses/BaseResponse";
+import {SqlOn} from "@/types/api-responses/RunSql";
 
+// map database connections
 export async function GET(_: NextRequest): Promise<NextResponse<BaseResponse<string | { [name: string]: Connection }>>> {
 	const databases: { [name: string]: Connection } = {};
 
@@ -73,13 +75,14 @@ export async function GET(_: NextRequest): Promise<NextResponse<BaseResponse<str
 	return NextResponse.json({ success: true, message: databases });
 }
 
+// create new database connection
 export async function POST(request: NextRequest): Promise<NextResponse<BaseResponse<string | null>>> {
 	const json: CMOptions = await request.json();
 
 	if (!("connection_name" in json))
 		return NextResponse.json({ success: false, message: "No property name found in the body.", err: null }, { status: 400 });
 
-	if (json.host === "localhost" || json.host === "127.0.0.1")
+	if (json.host?.toLowerCase() === "localhost" || json.host === "127.0.0.1")
 		return NextResponse.json({ success: false, message: "Localhost and/or 127.0.0.1 are invalid addresses for a remote host." })
 
 	try {
@@ -91,7 +94,25 @@ export async function POST(request: NextRequest): Promise<NextResponse<BaseRespo
 	return NextResponse.json({ success: true, message: null }, { status: 201 });
 }
 
+// run sql on a database connection
+export async function PUT(request: NextRequest): Promise<NextResponse<BaseResponse<string | Packets[]>>> {
+	const json: SqlOn = await request.json();
 
-export function PUT(request: NextRequest): NextResponse<BaseResponse<string>> {
-	return NextResponse.json({ success: true, message: "" });
+	let result: Packets[] | undefined;
+	try {
+		result = await ConnectionsManager.queryConnection(json.connection, ...json.sql);
+	} catch (error: any) {
+		return NextResponse.json({ success: false, message: error })
+	}
+
+	return result === undefined
+		? NextResponse.json({
+			success: false,
+			message: "The connection name is not a valid connection name."
+		}, {status: 400})
+		: NextResponse.json({
+			success: true,
+			message: result
+		});
+
 }

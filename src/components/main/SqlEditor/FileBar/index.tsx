@@ -11,11 +11,11 @@ import {
 } from "react";
 import {StateTuple} from "@/types/TypeDefinitions";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faDownload, faFile, faUpload, faXmark} from "@fortawesome/free-solid-svg-icons";
+import {FaDownload, FaFile, FaUpload, FaXmark} from "react-icons/fa6";
+
+import bottomBarManager from "@/managers/BottomBarManager";
 
 import "./index.css";
-import bottomBarManager from "@/managers/BottomBarManager";
 
 interface FileBarProps {
 	onChange: ((content: string, saveCurrent: ((content: string) => void)) => void);
@@ -26,8 +26,6 @@ interface File {
 	content: string;
 	isRenaming: boolean;
 }
-
-// THIS FILE IS A FUCKING SPAGHETTI
 
 export default function FileBar({onChange}: FileBarProps): ReactElement {
 	const [currentFile, setCurrentFile]: StateTuple<number> = useState<number>(0);
@@ -185,9 +183,9 @@ export default function FileBar({onChange}: FileBarProps): ReactElement {
 	return (
 		<div className="file-bar-controls">
 			<div className="file-bar-controls-buttons">
-				<div className="file-bar-control-icon" onClick={onUpload}><FontAwesomeIcon icon={faUpload}/></div>
-				<div className="file-bar-control-icon" onClick={onDownload}><FontAwesomeIcon icon={faDownload}/></div>
-				<div className="file-bar-control-icon" onClick={onNewFile}><FontAwesomeIcon icon={faFile}/></div>
+				<div className="file-bar-control-icon" onClick={onUpload}><FaUpload/></div>
+				<div className="file-bar-control-icon" onClick={onDownload}><FaDownload/></div>
+				<div className="file-bar-control-icon" onClick={onNewFile}><FaFile/></div>
 			</div>
 			<div className="file-bar-main">
 				{files.current.map(({name, isRenaming}: File, key: number): ReactElement => (
@@ -196,7 +194,7 @@ export default function FileBar({onChange}: FileBarProps): ReactElement {
 						{isRenaming
 							? <input onBlur={onBlurRename(key)} onKeyDown={onSubmitRename(key)} autoFocus className="file-bar-edit-input" defaultValue={name}/>
 							: <p onClick={changeFile(key)} onDoubleClick={renameFile(key)} >{name}</p>}
-						{moreThanOneFile && <FontAwesomeIcon icon={faXmark} size="sm" className="file-bar-file-close" onClick={closeFile(key)}/>}
+						{moreThanOneFile && <FaXmark className="file-bar-file-close" onClick={closeFile(key)}/>}
 					</div>
 				))}
 			</div>

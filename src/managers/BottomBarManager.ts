@@ -21,7 +21,7 @@ class BottomBarManager extends EventEmitter {
 	public removeTask(key: string): void {
 		delete this.tasks[key];
 
-		this.emit("tasksUpdated", this.tasks)
+		this.emit("tasksUpdated", this.tasks);
 	}
 
 	public get dbVersion(): Promise<string> {

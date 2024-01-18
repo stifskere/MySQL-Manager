@@ -3,13 +3,12 @@ import {StateTuple} from "@/types/TypeDefinitions";
 
 import bottomBarManager, {Task} from "@/managers/BottomBarManager";
 
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faCaretRight, faCaretUp, faCircleCheck, faDatabase, faSpinner} from "@fortawesome/free-solid-svg-icons";
+import {FaCaretRight, FaCaretUp, FaCircleCheck, FaDatabase, FaSpinner} from "react-icons/fa6";
 
 import {ProgressBar} from "primereact/progressbar";
+import {DateTime} from "luxon";
 
 import "./index.css";
-import {DateTime} from "luxon";
 
 
 export default function BottomBar(): ReactElement {
@@ -21,7 +20,7 @@ export default function BottomBar(): ReactElement {
 		if (version === undefined)
 			bottomBarManager.dbVersion.then((version: string): void => setVersion(version));
 
-		bottomBarManager.on("tasksUpdated", setTasks);
+		bottomBarManager.once("tasksUpdated", setTasks);
 
 		const interval: NodeJS.Timeout = setInterval((): void => {
 			for (const task in tasks) {
@@ -39,12 +38,10 @@ export default function BottomBar(): ReactElement {
 		}, 1000);
 
 		return (): void => {
-			bottomBarManager.off("tasksUpdated", setTasks);
 			clearInterval(interval);
 		};
 	}, [tasks, version]);
 
-	const hasVersion: boolean = version !== undefined;
 	const hasTasks: boolean = Object.keys(tasks).length !== 0;
 	const tasksNo: number = Object.keys(tasks).length;
 
@@ -58,11 +55,11 @@ export default function BottomBar(): ReactElement {
 	return (
 		<footer className="footer-container">
 			<div className="footer-version">
-				<FontAwesomeIcon
-					className={hasVersion ? "" : "fa-spin"}
-					icon={hasVersion ? faDatabase : faSpinner}
-					display="block"
-				/>
+				{version !== undefined
+					? <FaDatabase display="block" />
+					: <FaSpinner className="fa-spin" display="block" />
+				}
+
 				<p>{version ?? "loading..."}</p>
 			</div>
 			{
@@ -73,19 +70,19 @@ export default function BottomBar(): ReactElement {
 							(<div className="footer-tasks-viewer base-container-style">
 								{Object.keys(tasks).map((key: string): ReactElement => (
 									<div key={key} className="footer-tasks-task">
-										<p><FontAwesomeIcon icon={faSpinner} className="fa-spin footer-tasks-task-spinner"/> {tasks[key].name}</p>
+										<p><FaSpinner className="fa-spin footer-tasks-task-spinner"/> {tasks[key].name}</p>
 										<small id={`task-${key}-counter`}>running for: 0s</small>
 									</div>
 								))}
 							</div>)
 						}
 						<ProgressBar mode="indeterminate" style={{ height: '3px', width: '5vw' }} />
-						<FontAwesomeIcon icon={tasksMenuOpen ? faCaretUp : faCaretRight} />
-						<p>Running {tasksNo} {tasksNo === 1 ? "task" : "tasks"}</p>
+						{tasksMenuOpen ? <FaCaretUp/> : <FaCaretRight/>}
+						<p>{tasksNo === 1 ? tasks[Object.keys(tasks)[0]].name : `Running ${tasksNo} tasks`}</p>
 					</div>
 				) : (
 					<div className="footer-tasks-container">
-						<FontAwesomeIcon icon={faCircleCheck} display="block"/>
+						<FaCircleCheck display="block"/>
 						<p>Ready.</p>
 					</div>
 				)

@@ -1,33 +1,28 @@
-import {HTMLInputTypeAttribute, ReactElement} from "react";
+import { InputHTMLAttributes, ReactElement } from "react";
 
-import {InputText} from "primereact/inputtext";
+import { InputText } from "primereact/inputtext";
 
 import "./index.css";
 
-interface ModalInputProps {
+interface ModalInputProps extends InputHTMLAttributes<HTMLInputElement> {
 	text: string;
 	help?: string;
-	placeholder?: string;
-	type?: HTMLInputTypeAttribute;
-	required?: boolean;
-	name?: string;
 	default?: string;
-	className?: string;
 }
 
 export default function ModalInput(props: ModalInputProps): ReactElement {
 	return (
 		<div className="modal-input">
-			<label htmlFor="username">{props.text}</label>
+			<label htmlFor="modal-input">{props.text}</label>
 			<InputText
-				defaultValue={props.default ?? ""}
-				name={props.name ?? ""}
+				name={props.name ?? "aaa"}
 				required={props.required ?? false}
-				id="username"
-				aria-describedby="username-help"
+				defaultValue={props.default}
+				id="modal-input"
 				placeholder={props.placeholder}
 				type={props.type}
 				className={props.className ?? ""}
+				readOnly={false}
 			/>
 			{props.help &&
 				<small id="username-help">

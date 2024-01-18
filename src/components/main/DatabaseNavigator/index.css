@@ -1,11 +1,12 @@
 
 .connection-explorer-main {
 	height: 100%;
-	width: 15%;
 
 	flex-shrink: 0;
 
 	overflow: scroll;
+
+	flex-grow: 1;
 }
 
 .connection-explorer-tree {
