@@ -6,9 +6,9 @@ import {Button} from "primereact/button";
 
 import {FaGithub} from "react-icons/fa6";
 import {IoLogoFirebase} from "react-icons/io5";
+import {TbBrandNextjs} from "react-icons/tb";
 
 import "./index.css";
-import {TbBrandNextjs} from "react-icons/tb";
 
 export default function AboutModal({onCancel}: ModalProps): ReactElement {
 	return (

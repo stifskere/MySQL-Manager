@@ -3,8 +3,8 @@ import { StateTuple } from "@/types/TypeDefinitions";
 
 import { FaPlay } from "react-icons/fa";
 
-import NewConnectionModal from "../modals/NewConnectionModal";
-import AboutModal from "@/components/main/modals/AboutModal";
+import NewConnectionModal from "@/components/modals/NewConnectionModal";
+import AboutModal from "@/components/modals/AboutModal";
 
 import bottomBarManager from "@/managers/BottomBarManager";
 

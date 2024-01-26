@@ -20,7 +20,7 @@ export default function BottomBar(): ReactElement {
 		if (version === undefined)
 			bottomBarManager.dbVersion.then((version: string): void => setVersion(version));
 
-		bottomBarManager.once("tasksUpdated", setTasks);
+		bottomBarManager.on("tasksUpdated", setTasks);
 
 		const interval: NodeJS.Timeout = setInterval((): void => {
 			for (const task in tasks) {
@@ -39,6 +39,7 @@ export default function BottomBar(): ReactElement {
 
 		return (): void => {
 			clearInterval(interval);
+			bottomBarManager.off("tasksUpdated", setTasks);
 		};
 	}, [tasks, version]);
 

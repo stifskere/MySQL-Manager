@@ -7,7 +7,7 @@ import {
 import { StateTuple } from "@/types/TypeDefinitions";
 
 import ModalProps from "@/types/props/ModalProps";
-import ModalInput from "@/components/main/modals/ModalInput";
+import ModalInput from "@/components/modals/ModalInput";
 
 import { Button } from "primereact/button";
 

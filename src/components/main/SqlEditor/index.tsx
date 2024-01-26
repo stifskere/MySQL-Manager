@@ -1,7 +1,7 @@
 import {MutableRefObject, ReactElement, useEffect, useRef, useState} from "react";
 import {StateTuple} from "@/types/TypeDefinitions";
 
-import FileBar from "@/components/main/SqlEditor/FileBar";
+import FileBar from "./FileBar";
 
 import { Editor } from "@monaco-editor/react";
 

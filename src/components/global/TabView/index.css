@@ -1,0 +1,49 @@
+.tab-bar-main {
+	display: flex;
+
+	height: 100%;
+
+	overflow: scroll;
+
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+
+.tab-bar-tab {
+	display: flex;
+
+	align-items: center;
+	justify-content: center;
+
+	gap: 10px;
+
+	padding: 5px 15px;
+
+	cursor: pointer;
+}
+
+.tab-bar-tab > p {
+	margin: 0;
+
+	padding: 0.3vh 0;
+}
+
+.tab-bar-close-tab {
+	color: #65656570;
+
+	transition: color 0.2s;
+}
+
+.tab-bar-close-tab:hover {
+	color: white;
+}
+
+.tab-bar-current-tab {
+	border-bottom: 1px white solid;
+}
+
+.tab-bar-edit-input {
+	background: #65656570;
+	border: 1px solid black;
+	outline: #65656570;
+}
