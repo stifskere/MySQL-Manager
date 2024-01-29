@@ -34,8 +34,6 @@ export default function NewConnectionModal({onCancel}: ModalProps): ReactElement
 			body[element.name] = element.value;
 		}
 
-		console.log(JSON.stringify(body))
-
 		fetch("/api/connections", { method: "post", body: JSON.stringify(body) })
 			.then(async (response: Response): Promise<void> => {
 				if (response.ok)

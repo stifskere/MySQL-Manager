@@ -7,6 +7,7 @@ import bottomBarManager from "@/managers/BottomBarManager";
 import useTabView, {type Tab, type TabView} from "@/components/global/TabView";
 
 import "./index.css";
+import useTriggerReRender from "@/components/global/TriggerReRender";
 
 interface FileBarProps {
 	onChange: ((content: string, saveCurrent: ((content: string) => void)) => void);
@@ -17,8 +18,8 @@ interface File {
 }
 
 export default function FileBar({onChange}: FileBarProps): ReactElement {
-	const [forceReKey, setForceReKey]: StateTuple<number> = useState<number>(0);
 	const [ready, setReady]: StateTuple<boolean> = useState<boolean>(false);
+	const triggerReRender: (() => void) = useTriggerReRender();
 	const [TabComponent, currentTab, tabs, setCurrent]: TabView<File> = useTabView<File>(1, (): void => {
 		saveInStorage();
 	});
@@ -51,14 +52,11 @@ export default function FileBar({onChange}: FileBarProps): ReactElement {
 				]) satisfies Tab<File>[];
 
 			setReady(true);
+			setCurrent(0);
 		} else {
-			onChange(tabs.current[currentTab].args.content, saveCurrent)
+			onChange(tabs.current[currentTab].args.content, saveCurrent);
 		}
-	}, [currentTab, onChange, ready, saveCurrent, tabs]);
-
-	function forceReRender(): void {
-		setForceReKey(forceReKey > 1000 ? 0 : forceReKey + 1);
-	}
+	}, [currentTab, onChange, ready, saveCurrent, setCurrent, tabs]);
 
 	function onDownload(): void {
 		bottomBarManager.addTask("dw-file", "Downloading file");
@@ -83,7 +81,7 @@ export default function FileBar({onChange}: FileBarProps): ReactElement {
 				}
 			});
 
-			forceReRender();
+			triggerReRender();
 			saveInStorage();
 		}
 

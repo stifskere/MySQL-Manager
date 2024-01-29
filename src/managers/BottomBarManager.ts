@@ -7,21 +7,25 @@ export interface Task {
 }
 
 class BottomBarManager extends EventEmitter {
-	private tasks: { [key: string]: Task } = {};
+	private m_tasks: { [key: string]: Task } = {};
+
+	public get tasks(): { [key: string]: Task } {
+		return Object.assign({}, this.m_tasks);
+	}
 
 	public addTask(key: string, task: string): void {
-		if (key in this.tasks)
+		if (key in this.m_tasks)
 			return;
 
-		this.tasks[key] = { name: task, since: DateTime.now() };
+		this.m_tasks[key] = { name: task, since: DateTime.now() };
 
-		this.emit("tasksUpdated", this.tasks);
+		this.emit("tasksUpdated", this.m_tasks);
 	}
 
 	public removeTask(key: string): void {
-		delete this.tasks[key];
+		delete this.m_tasks[key];
 
-		this.emit("tasksUpdated", this.tasks);
+		this.emit("tasksUpdated", this.m_tasks);
 	}
 
 	public get dbVersion(): Promise<string> {

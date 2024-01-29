@@ -1,1 +1,68 @@
 
+.main-console {
+	flex-grow: 1;
+
+	overflow: hidden;
+
+	position: relative;
+}
+
+.results-viewer-tabs {
+	height: 10%;
+
+	margin: 0.3vh 0.5vw;
+}
+
+.no-queries-result-tab {
+	height: 100%;
+	width: 100%;
+
+	display: flex;
+
+	align-items: center;
+	justify-content: center;
+
+	flex-direction: column;
+}
+
+.no-queries-result-tab > h1 {
+	margin: 0;
+}
+
+.error-result-tab {
+	position: absolute;
+
+	top: 50%;
+	left: 50%;
+
+	transform: translate(-50%, -50%);
+}
+
+.error-result-tab > div {
+	display: flex;
+
+	flex-direction: column;
+
+	gap: 15px;
+}
+
+.error-result-title {
+	margin: 0;
+
+	font-size: 1.2em;
+
+	color: darkred;
+}
+
+.error-result-container {
+	background: #8b00007f;
+
+	padding: 1vh 1vw;
+
+	border-radius: 8px;
+	border: darkred solid 2px;
+}
+
+.results-viewer-table {
+	background: transparent !important;
+}

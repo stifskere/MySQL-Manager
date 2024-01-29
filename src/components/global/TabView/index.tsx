@@ -1,9 +1,10 @@
-import {FocusEvent, KeyboardEvent, MutableRefObject, ReactElement, useRef, useState} from "react";
+import {FocusEvent, KeyboardEvent, MutableRefObject, ReactElement, useEffect, useRef, useState} from "react";
 import {StateTuple} from "@/types/TypeDefinitions";
 
 import {FaXmark} from "react-icons/fa6";
 
 import "./index.css";
+import useTriggerReRender from "@/components/global/TriggerReRender";
 
 export interface Tab<TArgs> {
 	icon?: ReactElement
@@ -19,17 +20,21 @@ export type TabView<TArgs> = [
 	(tab: string | number) => void // move current
 ];
 
+// this is pure trash.
 export default function useTabView<TArgs>(minimumTabs: number = 1, onChangeTab: ((tab: Tab<TArgs>) => void) = (): void => {}): TabView<TArgs> {
-	const [forceReKey, setForceReKey]: StateTuple<number> = useState<number>(0);
 	const [currentTab, setCurrentTab]: StateTuple<number> = useState<number>(0);
-	const tabs: MutableRefObject<Tab<TArgs>[]> = useRef<Tab<TArgs>[]>([]);
+	const tabs: MutableRefObject<Tab<TArgs>[]> = useRef<Tab<TArgs>[]>([]); // TODO: convert this into useState ffs
+	const triggerReRender: (() => void) = useTriggerReRender();
 
-	function forceReRender(): void {
-		setForceReKey(forceReKey > 1000 ? 0 : forceReKey + 1);
-	}
+	useEffect((): void => {
+		console.log(tabs.current.length);
+		if (tabs.current.length < 1)
+			setCurrentTab(-1);
+	}, [tabs]);
 
 	function onChangeTabWrapper(index?: number): void {
 		onChangeTab(tabs.current[index ?? currentTab]);
+		triggerReRender();
 	}
 
 	function setCurrent(tab: string | number): void {
@@ -44,10 +49,10 @@ export default function useTabView<TArgs>(minimumTabs: number = 1, onChangeTab: 
 	function closeTab(index: number): (() => void) {
 		return (): void => {
 			tabs.current.splice(index, 1);
-			const nextFile: number = index - 1 < 0 ? index : index - 1;
+			let nextFile: number = tabs.current.length === 0 ? -1 : (index - 1 < 0 ? index : index - 1);
 
 			if (nextFile === currentTab)
-				forceReRender();
+				triggerReRender();
 
 			setCurrentTab(nextFile);
 			onChangeTabWrapper(nextFile);
@@ -68,7 +73,7 @@ export default function useTabView<TArgs>(minimumTabs: number = 1, onChangeTab: 
 
 			tabs.current[index].isRenaming = true;
 
-			forceReRender();
+			triggerReRender();
 		};
 	}
 
@@ -80,7 +85,7 @@ export default function useTabView<TArgs>(minimumTabs: number = 1, onChangeTab: 
 			tabs.current[index].isRenaming = false;
 			tabs.current[index].name = (event.target as HTMLInputElement).value;
 
-			forceReRender();
+			triggerReRender();
 			onChangeTabWrapper();
 		};
 	}
@@ -90,7 +95,7 @@ export default function useTabView<TArgs>(minimumTabs: number = 1, onChangeTab: 
 			tabs.current[index].isRenaming = false;
 			tabs.current[index].name = (event.target as HTMLInputElement).value;
 
-			forceReRender();
+			triggerReRender();
 			onChangeTabWrapper();
 		};
 	}

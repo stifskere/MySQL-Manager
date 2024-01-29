@@ -82,8 +82,8 @@ export async function POST(request: NextRequest): Promise<NextResponse<BaseRespo
 	if (!("connection_name" in json))
 		return NextResponse.json({ success: false, message: "No property name found in the body.", err: null }, { status: 400 });
 
-	if (json.host?.toLowerCase() === "localhost" || json.host === "127.0.0.1")
-		return NextResponse.json({ success: false, message: "Localhost and/or 127.0.0.1 are invalid addresses for a remote host." })
+	if (checkIp(json.host!) === "Private")
+		return NextResponse.json({ success: false, message: "The IP you entered seems to be a private IP." })
 
 	try {
 		await ConnectionsManager.addConnection(json);
@@ -92,6 +92,25 @@ export async function POST(request: NextRequest): Promise<NextResponse<BaseRespo
 	}
 
 	return NextResponse.json({ success: true, message: null }, { status: 201 });
+
+	function checkIp(ip: string): "Public" | "Private" | undefined {
+		if (ip.toLowerCase() === "localhost")
+			return "Private";
+
+		const ipParts: number[] = ip.split(/\./g).map(Number);
+
+		if (ipParts.length !== 4 || ipParts.some((part: number): boolean => isNaN(part) || part < 0 || part > 255))
+			return undefined;
+
+		const numberIp: number = (ipParts[0] << 24) | (ipParts[1] << 16) | (ipParts[2] << 8) | ipParts[3];
+
+		return (
+			((numberIp >>> 0) >= (10 << 24) && (numberIp >>> 0) <= (10 << 24 | 0xFF << 16 | 0xFF << 8 | 0xFF) ||
+			(numberIp >>> 0) >= (172 << 24 | 16 << 16) && (numberIp >>> 0) <= (172 << 24 | 31 << 16 | 0xFF << 8 | 0xFF) ||
+			(numberIp >>> 0) >= (192 << 24 | 168 << 16) && (numberIp >>> 0) <= (192 << 24 | 168 << 16 | 0xFF << 8 | 0xFF) ||
+			(numberIp >>> 0) === (127 << 24 | 1)) ? "Private" : "Public"
+		);
+	}
 }
 
 // run sql on a database connection
